@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docer build -t bilmakovchik/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run bilmakovchik/react-test npm run test
+
+after_success:
+  - docker build -t bilmakovchik/multi-client ./client
+  - docker build -t bilmakovchik/multi-nginx ./nginx
+  - docker build -t bilmakovchik/multi-server ./server
+  - docker build -t bilmakovchik/multi-worker ./worker
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # push to docker hub
+  - docker push bilmakovchik/multi-client
+  - docker push bilmakovchik/multi-nginx
+  - docker push bilmakovchik/multi-server
+  - docker push bilmakovchik/multi-worker
