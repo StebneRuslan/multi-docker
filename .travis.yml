@@ -3,7 +3,7 @@ services:
   - docker
 
 before_install:
-  - docer build -t bilmakovchik/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t bilmakovchik/react-test -f ./client/Dockerfile.dev ./client
 
 script:
   - docker run bilmakovchik/react-test npm run test
